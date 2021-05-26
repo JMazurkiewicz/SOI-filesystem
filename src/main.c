@@ -16,7 +16,7 @@ void do_new(int argc, char** argv) {
     const char* file_name = argv[0];
     size_t size = 0;
 
-    if(sscanf(argv[1], "%zu", &size) != 1) {
+    if(sscanf(argv[1], "%"SCNVINT, &size) != 1) {
         puts("svfs new: invalid file_size argument");
     } else {
         new_vfs(file_name, size);

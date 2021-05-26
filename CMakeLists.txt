@@ -10,7 +10,9 @@ set(
 
     src/help.c
     src/main.c
-    src/new_vfs.c
+    
+    src/vfs/new_vfs.c
+    src/vfs/super_block.c
 )
 
 add_executable(svfs ${SOURCES})
