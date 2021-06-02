@@ -13,13 +13,13 @@ void do_new(int argc, char** argv) {
         return;
     }
 
-    const char* file_name = argv[0];
+    const char* disk_name = argv[0];
     size_t size = 0;
 
     if(sscanf(argv[1], "%"SCNVINT, &size) != 1) {
         puts("svfs new: invalid file_size argument");
     } else {
-        new_vfs(file_name, size);
+        new_vfs(disk_name, size);
     }
 }
 
@@ -32,11 +32,14 @@ void do_print(int argc, char** argv) {
 }
 
 void do_remove(int argc, char** argv) {
+    const char* const file_name = argv[0];
+
 
 }
 
 void do_delete(int argc, char** argv) {
-
+    const char* const disk_name = argv[0];
+    delete_vfs(disk_name);
 }
 
 int main(int argc, char** argv) {

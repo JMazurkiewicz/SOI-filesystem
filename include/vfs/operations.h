@@ -4,7 +4,11 @@
 
 #include "def.h"
 
-void new_vfs(const char* name, vint_t size);
-void delete_vfs(const char* name);
+void new_vfs(const char* disk_name, vint_t size);
+void delete_vfs(const char* disk_name);
+
+void remove_from_vfs(const char* disk_name, const char* file_name);
+
+void print_vfs(const char* disk_name);
 
 #endif
