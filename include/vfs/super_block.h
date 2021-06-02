@@ -1,4 +1,5 @@
 /// @author Jakub Mazurkiewicz
+
 #ifndef VFS_SUPER_BLOCK_H
 #define VFS_SUPER_BLOCK_H
 
@@ -6,7 +7,11 @@
 
 #include "def.h"
 
+#define SBLOCK_MAGIC ((vint_t)0x73766673)
+
 struct super_block {
+    vint_t magic;
+
     vint_t disk_size;
     vint_t file_count;
 

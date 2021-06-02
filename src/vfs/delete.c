@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-void delete_vfs(const char* disk_name) {
+void vfs_delete(const char* disk_name) {
     if(remove(disk_name) == 0) {
         printf("svfs: disk \"%s\" has been removed\n", disk_name);
     } else {

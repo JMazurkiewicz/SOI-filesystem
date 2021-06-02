@@ -2,17 +2,24 @@ cmake_minimum_required(VERSION 3.10)
 
 project("SOI - Virtual filesystem")
 
-set(CMAKE_C_STANDARD 90)
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
+
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
 
 set(
     SOURCES
 
+    src/vfs/copy.c
+    src/vfs/delete.c
+    src/vfs/new.c
+    src/vfs/remove.c
+    src/vfs/super_block.c
+
     src/help.c
     src/main.c
-    
-    src/vfs/new_vfs.c
-    src/vfs/super_block.c
 )
 
 add_executable(svfs ${SOURCES})

@@ -1,3 +1,5 @@
+/// @author Jakub Mazurkiewicz
+
 #ifndef VFS_INODE_H
 #define VFS_INODE_H
 
@@ -5,8 +7,8 @@
 
 struct inode {
     char file_name[32];
-    int32_t file_size;
-    int32_t file_block;
+    vint_t file_size;
+    vint_t first_block_offset;
 };
 
 #endif

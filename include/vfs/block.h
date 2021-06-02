@@ -1,3 +1,5 @@
+/// @author Jakub Mazurkiewicz
+
 #ifndef VFS_BLOCK_H
 #define VFS_BLOCK_H
 
