@@ -1,4 +1,6 @@
-#include "vfs/super_block.h"
+/// @author Jakub Mazurkiewicz
+
+#include "vfs.h"
 
 struct super_block scan_super_block(FILE* disk) {
     rewind(disk);

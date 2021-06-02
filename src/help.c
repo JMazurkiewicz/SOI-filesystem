@@ -1,7 +1,5 @@
 /// @author Jakub Mazurkiewicz
 
-#include "help.h"
-
 #include <stdio.h>
 
 static const char* const HELP = {
