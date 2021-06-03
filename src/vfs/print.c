@@ -10,6 +10,7 @@ int vfs_print(FILE* disk) {
 
     const vint_t taken_inodes = count_taken_inodes(&sblock);
     if(taken_inodes == 0) {
+        puts("Disk is empty.");
         return 0;
     }
 
