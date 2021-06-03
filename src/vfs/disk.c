@@ -2,6 +2,12 @@
 
 #include "vfs.h"
 
+struct block load_block(FILE* disk) {
+    struct block block;
+    fread(&block, sizeof(struct block), 1, disk);
+    return block;
+}
+
 struct inode load_inode(FILE* disk) {
     struct inode inode;
     fread(&inode, sizeof(struct inode), 1, disk);
@@ -21,6 +27,56 @@ bool validate_super_block(const struct super_block* sblock) {
 
 vint_t count_taken_inodes(const struct super_block* sblock) {
     return sblock->inode_count - sblock->free_inode_count;
+}
+
+vint_t fseek_first_free_block(FILE* disk, const struct super_block* sblock) {
+    vint_t free_block_offset = sblock->first_block_offset;
+    fseek(disk, free_block_offset, SEEK_SET);
+
+    do {
+        struct block block = load_block(disk);
+        if(block.next_block_offset == FREE_BLOCK_MARK) {
+            break;
+        }
+
+        free_block_offset += BLOCK_SIZE;
+    } while(true);
+
+    fseek(disk, free_block_offset, SEEK_SET);
+    return free_block_offset;
+}
+
+vint_t fseek_next_free_block(FILE* disk) {
+    vint_t free_block_offset = ftell(disk);
+    
+    do {
+        struct block block = load_block(disk);
+        if(block.next_block_offset == FREE_BLOCK_MARK) {
+            break;
+        }
+
+        free_block_offset += BLOCK_SIZE;
+    } while(true);
+
+    fseek(disk, free_block_offset, SEEK_SET);
+    return free_block_offset;
+}
+
+vint_t fseek_first_free_inode(FILE* disk, const struct super_block* sblock) {
+    vint_t free_inode_offset = sblock->first_inode_offset;
+    fseek(disk, free_inode_offset, SEEK_SET);
+
+    do {
+        struct inode inode = load_inode(disk);
+        if(inode.first_block_offset == FREE_INODE_MARK) {
+            break;
+        }
+
+        free_inode_offset += sizeof(struct inode);
+    } while(true);
+
+    fseek(disk, free_inode_offset, SEEK_SET);
+    return free_inode_offset;
 }
 
 void write_block(FILE* disk, const struct block* block) {

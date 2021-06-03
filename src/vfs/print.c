@@ -21,7 +21,9 @@ int vfs_print(FILE* disk) {
     for(vint_t i = 0; i < sblock.inode_count; ++i) {
         const struct inode inode = load_inode(disk);
 
-        printf("%-32s| %-14d| %13d\n", inode.file_name, inode.file_size, inode.first_block_offset);
+        if(inode.first_block_offset != 0) {
+            printf("%-32s| %-14d| %-13d\n", inode.file_name, inode.file_size, inode.first_block_offset);
+        }
     }
 
     return 0;

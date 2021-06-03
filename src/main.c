@@ -69,7 +69,7 @@ static void do_copy(int argc, char** argv) {
 
         if(file == NULL) {
             printf("svfs copy: unable to open \"%s\" file for copying\n", file_name);
-        } else if(vfs_copy_from_native_to_virtual(disk, file) != 0) {
+        } else if(vfs_copy_from_native_to_virtual(disk, file, file_name) != 0) {
             printf("svfs copy: unable to copy \"%s\" from native to virtual disk (\"%s\")\n", file_name, disk_name);
             fclose(file);
         }

@@ -1,6 +1,7 @@
 # SOI - system plików
 
 Autor: Jakub Mazurkiewicz
+
 Uzyskana ocena: ?/8
 
 ## Treść zadania
