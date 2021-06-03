@@ -5,7 +5,8 @@ Uzyskana ocena: ?/8
 
 ## Treść zadania
 
-@todo
+* Pełna treść zadania: [LINK](https://www.ia.pw.edu.pl/~tkruk/edu/soib/lab/t6.txt),
+* Program nie musi działać w systemie Minix (może być Linux),
 
 ## Kompilacja i uruchamianie
 

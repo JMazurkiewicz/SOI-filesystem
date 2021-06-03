@@ -2,15 +2,20 @@
 
 #include "vfs.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 static const char DISK_EXT[] = ".vd";
 
-static void vfs_form_disk(FILE* disk, vint_t size);
+static void vfs_form_super_block(FILE* disk, vint_t size);
+static void vfs_form_inodes(FILE* disk, vint_t size);
+static void vfs_form_blocks(FILE* disk, vint_t block_count);
 
 int vfs_new(const char* disk_name, vint_t size) {
+    if(size < MIN_DISK_SIZE) {
+        return -1;
+    }
+
     const size_t file_name_length = strlen(disk_name) + sizeof(DISK_EXT);
     char* file_name = malloc(file_name_length);
 
@@ -22,13 +27,53 @@ int vfs_new(const char* disk_name, vint_t size) {
         return -1;
     }
 
-    vfs_form_disk(disk, size);
+    vfs_form_super_block(disk, size);
 
     fclose(disk);
     free(file_name);
     return 0;
 }
 
-void vfs_form_disk(FILE* disk, vint_t size) {
-    /// @todo Create a disk.
+void vfs_form_super_block(FILE* disk, vint_t size) {
+    struct super_block sblock;
+    
+    sblock.magic = SBLOCK_MAGIC;
+    sblock.disk_size = size;
+    
+    sblock.first_inode_offset = sizeof(struct super_block);
+    sblock.inode_count = MAX_INODE_COUNT;
+    sblock.free_inode_count = sblock.inode_count;
+
+    const vint_t possible_blocks = (size - HEADER_SIZE) / BLOCK_SIZE;
+
+    sblock.first_block_offset = HEADER_SIZE;
+    sblock.block_count = possible_blocks;
+    sblock.free_block_count = sblock.block_count;
+
+    write_super_block(disk, &sblock);
+    vfs_form_inodes(disk, size);
+    vfs_form_blocks(disk, possible_blocks);
+}
+
+void vfs_form_inodes(FILE* disk, vint_t size) {
+    const struct inode empty_inode = {
+        .file_name = {'\0'},
+        .file_size = 0,
+        .first_block_offset = 0
+    };
+
+    for(vint_t i = 0; i < MAX_INODE_COUNT; ++i) {
+        write_inode(disk, &empty_inode);
+    }
+}
+
+void vfs_form_blocks(FILE* disk, vint_t block_count) {
+    const struct block empty_block = {
+        .data = {0},
+        .next_block_offset = 0
+    };
+
+    for(vint_t i = 0; i < block_count; ++i) {
+        write_block(disk, &empty_block);
+    }
 }
