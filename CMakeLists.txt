@@ -14,9 +14,11 @@ set(
 
     src/vfs/copy.c
     src/vfs/delete.c
+    src/vfs/disk.c
     src/vfs/new.c
+    src/vfs/print.c
     src/vfs/remove.c
-    src/vfs/super_block.c
+    src/vfs/stats.c
 
     src/help.c
     src/main.c

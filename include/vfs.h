@@ -44,10 +44,10 @@ void print_super_block(FILE* disk, struct super_block* sblock);
 int vfs_new(const char* disk_name, vint_t size);
 int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file);
 int vfs_copy_from_virtual_to_native(FILE* disk, const char* file_name);
+int vfs_print(FILE* disk);
+int vfs_stats(FILE* disk);
+int vfs_remove(FILE* disk, const char* file_name);
+int vfs_delete(const char* disk_name);
 
-void vfs_delete(const char* disk_name);
-
-void vfs_print(FILE* disk);
-void vfs_remove(const char* disk_name, const char* file_name);
 
 #endif

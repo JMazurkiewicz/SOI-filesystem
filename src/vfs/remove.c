@@ -1,6 +1,7 @@
 /// @author Jakub Mazurkiewicz
 
+#include "vfs.h"
 
-void vfs_remove(const char* disk_name, const char* file_name) {
-
+int vfs_remove(FILE* disk, const char* file_name) {
+    return 0;
 }
