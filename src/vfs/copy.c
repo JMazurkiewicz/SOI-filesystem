@@ -7,13 +7,13 @@
 int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file, const char* file_name) {
     struct super_block sblock = load_super_block(disk);
 
-    if(sblock.free_inode_count == 0) {
+    if(!validate_super_block(&sblock) || sblock.free_inode_count == 0) {
         return -1;
     }
 
     fseek(file, 0, SEEK_END);
     const vint_t file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
+    rewind(file);
 
     const vint_t required_full_blocks = (file_size / MAX_BLOCK_DATA);
     const vint_t required_partial_block = (file_size % MAX_BLOCK_DATA != 0 ? 1 : 0);
@@ -45,7 +45,7 @@ int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file, const char* file_nam
         struct block block;
         fread(block.data, sizeof(unsigned char), MAX_BLOCK_DATA, file);
 
-        if(required_partial_block == 1 && i == required_blocks-1) {
+        if(required_partial_block == 0 && i == required_blocks-1) {
             block.next_block_offset = END_BLOCK_MARK;
         } else {
             block.next_block_offset = fseek_next_free_block(disk);
@@ -55,22 +55,22 @@ int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file, const char* file_nam
         write_block(disk, &block);
 
         block_offset = block.next_block_offset;
+        fseek(disk, block_offset, SEEK_SET);
     }
 
     if(required_partial_block) {
-        const vint_t remaining_bytes = file_size - (file_size % MAX_BLOCK_DATA);
-        
+        const vint_t remaining_bytes = file_size % MAX_BLOCK_DATA;
+
         struct block block;
         fread(block.data, sizeof(unsigned char), remaining_bytes, file);
         memset(block.data + remaining_bytes, 0, MAX_BLOCK_DATA - remaining_bytes);
 
         block.next_block_offset = END_BLOCK_MARK;
-
-        fseek_next_free_block(disk);
         write_block(disk, &block);
     }
 
     --sblock.free_inode_count;
+    sblock.free_block_count -= required_blocks;
     write_super_block(disk, &sblock);
     return 0;
 }

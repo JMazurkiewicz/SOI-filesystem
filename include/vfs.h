@@ -11,6 +11,8 @@
 typedef uint32_t vint_t;
 
 #define SCNVINT SCNu32
+#define PRIVINT PRIu32
+
 #define BLOCK_SIZE ((vint_t)4096)
 #define SBLOCK_MAGIC ((vint_t)0x73766673)
 #define MAX_INODE_COUNT ((vint_t)32)

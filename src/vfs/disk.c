@@ -47,6 +47,7 @@ vint_t fseek_first_free_block(FILE* disk, const struct super_block* sblock) {
 }
 
 vint_t fseek_next_free_block(FILE* disk) {
+    fseek(disk, (long)sizeof(struct block), SEEK_CUR);
     vint_t free_block_offset = ftell(disk);
     
     do {
@@ -58,7 +59,7 @@ vint_t fseek_next_free_block(FILE* disk) {
         free_block_offset += BLOCK_SIZE;
     } while(true);
 
-    fseek(disk, free_block_offset, SEEK_SET);
+    fseek(disk, -(long)sizeof(struct block), SEEK_CUR);
     return free_block_offset;
 }
 
