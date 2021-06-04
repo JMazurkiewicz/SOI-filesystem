@@ -1,5 +1,7 @@
 # SOI - system plików
 
+[![linux](https://github.com/JMazurkiewicz/SOI-filesystem/actions/workflows/linux.yml/badge.svg)](https://github.com/JMazurkiewicz/SOI-filesystem/actions/workflows/linux.yml)
+
 Autor: Jakub Mazurkiewicz
 
 Uzyskana ocena: ?/8
