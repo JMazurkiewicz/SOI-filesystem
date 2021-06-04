@@ -74,6 +74,8 @@ static void do_copy(int argc, char** argv) {
         } else {
             if(vfs_copy_from_native_to_virtual(disk, file, file_name) != 0) {
                 printf("svfs copy: unable to copy \"%s\" from native to virtual disk (\"%s\")\n", file_name, disk_name);
+            } else {
+                //printf("svfs copy:")
             }
             fclose(file);
         }
@@ -132,7 +134,7 @@ static void do_remove(int argc, char** argv) {
     const char* const file_name = argv[0];
     if(disk != NULL) {
         if(vfs_remove(disk, argv[0]) != 0 ) {
-            printf("svfs print: unable to remove \"%s\" from \"%s\" disk\n", file_name, disk_name);
+            printf("svfs remove: unable to remove \"%s\" from \"%s\" disk\n", file_name, disk_name);
         }
 
         fclose(disk);
@@ -142,7 +144,7 @@ static void do_remove(int argc, char** argv) {
 static void do_delete(int argc, char** argv) {
     const char* const disk_name = argv[0];
     if(vfs_delete(disk_name) != 0) {
-        printf("svfs: unable to remove \"%s\" disk\n", disk_name);
+        printf("svfs: unable to delete \"%s\" disk\n", disk_name);
     } else {
         printf("svfs: disk \"%s\" has been removed\n", disk_name);
     }

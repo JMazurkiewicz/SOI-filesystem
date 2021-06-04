@@ -9,7 +9,7 @@ disk_size='500000'
 response_empty=$'Disk is empty.'
 
 message_name='msg1.txt'
-message_altname='msg2.txt'
+message_altname='msg1_alt.txt'
 
 ret=0
 
@@ -19,12 +19,12 @@ cd messages
 ../$svfs copy from native to ../$disk_name.vd $message_name
 mv $message_name $message_altname
 ../$svfs copy from ../$disk_name.vd to native $message_name
-cd ..
 
-if cmp -s $message_altname $message_name
+if ! cmp -s -- "$message_altname" "$message_name"
 then
     ret=1
 fi
+cd ..
 
 ./$svfs remove $message_name from $disk_name.vd
 got=`./$svfs print $disk_name.vd`
