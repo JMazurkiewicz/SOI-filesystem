@@ -21,5 +21,5 @@ cmake --build .
 
 ## Ocena
 
-* Koncepcja: ?/2
+* Koncepcja: 2/2
 * Program: ?/6
