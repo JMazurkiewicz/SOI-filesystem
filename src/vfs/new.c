@@ -10,6 +10,7 @@ static const char DISK_EXT[] = ".vd";
 static void vfs_form_super_block(FILE* disk, vint_t size);
 static void vfs_form_inodes(FILE* disk, vint_t size);
 static void vfs_form_blocks(FILE* disk, vint_t block_count);
+static void vfs_form_remaining_bytes(FILE* disk, vint_t byte_count);
 
 int vfs_new(const char* disk_name, vint_t size) {
     if(size < MIN_DISK_SIZE) {
@@ -53,6 +54,9 @@ void vfs_form_super_block(FILE* disk, vint_t size) {
     write_super_block(disk, &sblock);
     vfs_form_inodes(disk, size);
     vfs_form_blocks(disk, possible_blocks);
+
+    const vint_t remaining_bytes = sblock.disk_size - (HEADER_SIZE + possible_blocks * BLOCK_SIZE);
+    vfs_form_remaining_bytes(disk, remaining_bytes);
 }
 
 void vfs_form_inodes(FILE* disk, vint_t size) {
@@ -76,4 +80,11 @@ void vfs_form_blocks(FILE* disk, vint_t block_count) {
     for(vint_t i = 0; i < block_count; ++i) {
         write_block(disk, &empty_block);
     }
+}
+
+void vfs_form_remaining_bytes(FILE* disk, vint_t byte_count) {
+    unsigned char* const bytes = malloc(byte_count);
+    memset(bytes, 0, byte_count);
+    fwrite(bytes, sizeof(unsigned char), byte_count, disk);
+    free(bytes);
 }
