@@ -7,7 +7,7 @@ disk_name='test_print'
 disk_size='500000'
 
 response_empty=$'Disk is empty.'
-response_nonempty=$'File name                       | Size in bytes | Disk offset \n--------------------------------+---------------+-------------\nmsg1.txt                        | 40920         | 1312        '
+response_nonempty=$'File name                       | Size in bytes | Disk offset \n--------------------------------+---------------+-------------\nmsg1.txt                        | 409s0         | 1312        '
 
 ./$svfs new $disk_name $disk_size
 got=`./$svfs print $disk_name.vd`
