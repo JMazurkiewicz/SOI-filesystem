@@ -4,6 +4,8 @@
 
 #include <string.h>
 
+static vint_t clamp_block_size(vint_t block_size);
+
 int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file, const char* file_name) {
     struct super_block sblock = load_super_block(disk);
 
@@ -76,6 +78,53 @@ int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file, const char* file_nam
 }
 
 int vfs_copy_from_virtual_to_native(FILE* disk, const char* file_name) {
-    /// @todo
-    return 0;
+    struct super_block sblock = load_super_block(disk);
+    if(!validate_super_block(&sblock)) {
+        return -1;
+    }
+
+    fseek(disk, sblock.first_inode_offset, SEEK_SET);
+
+    for(vint_t i = 0; i < sblock.inode_count; ++i) {
+        struct inode inode = load_inode(disk);
+        if(strcmp(inode.file_name, file_name) == 0) {
+            FILE* const file = fopen(file_name, "wb");
+            if(file == NULL) {
+                return -1;
+            }
+
+            const vint_t first_block_offset = inode.first_block_offset;
+            vint_t file_size = inode.file_size;
+
+            fseek(disk, first_block_offset, SEEK_SET);
+
+            do {
+                const struct block current_block = load_block(disk);
+                const vint_t next_block_offset = current_block.next_block_offset;
+
+                const vint_t current_block_size = clamp_block_size(file_size);
+                fwrite(current_block.data, sizeof(unsigned char), current_block_size, file);
+
+                if(next_block_offset != END_BLOCK_MARK) {
+                    file_size -= current_block_size;
+                    fseek(disk, next_block_offset, SEEK_SET);
+                } else {
+                    break;
+                }
+            } while(true);
+
+            fclose(file);
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+vint_t clamp_block_size(vint_t block_size) {
+    if(block_size > MAX_BLOCK_DATA) {
+        return MAX_BLOCK_DATA;
+    } else {
+        return block_size;
+    }
 }

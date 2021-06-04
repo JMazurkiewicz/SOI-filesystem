@@ -56,7 +56,6 @@ vint_t count_taken_inodes(const struct super_block* sblock);
 
 vint_t fseek_first_free_block(FILE* disk, const struct super_block* sblock);
 vint_t fseek_next_free_block(FILE* disk);
-
 vint_t fseek_first_free_inode(FILE* disk, const struct super_block* sblock);
 
 void write_block(FILE* disk, const struct block* block);
