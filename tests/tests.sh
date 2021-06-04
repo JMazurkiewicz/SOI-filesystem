@@ -20,6 +20,13 @@ source test_copy_remove.sh
 if [ $? -ne 0 ]
 then
     return 1
-else
-    return 0
 fi
+
+source test_self_copy_remove.sh
+
+if [ $? -ne 0 ]
+then
+    return 1
+fi
+
+return 0
