@@ -75,14 +75,14 @@ static void do_copy(int argc, char** argv) {
             if(vfs_copy_from_native_to_virtual(disk, file, file_name) != 0) {
                 printf("svfs copy: unable to copy \"%s\" from native to virtual disk (\"%s\")\n", file_name, disk_name);
             } else {
-                printf("svfs copy: file \"%s\" was copied from native disk to virtual (\"%s\")\n", file_name, disk_name);
+                printf("svfs copy: file \"%s\" has been copied from native disk to virtual (\"%s\")\n", file_name, disk_name);
             }
             fclose(file);
         }
     } else if(vfs_copy_from_virtual_to_native(disk, file_name) != 0) {
         printf("svfs copy: unable to copy \"%s\" from virtual disk (\"%s\") to native\n", file_name, disk_name);
     } else {
-        printf("svfs copy: file \"%s\" was copied virtual disk (\"%s\") to native\n", file_name, disk_name);
+        printf("svfs copy: file \"%s\" has been copied virtual disk (\"%s\") to native\n", file_name, disk_name);
     }
     
     fclose(disk);
@@ -138,7 +138,7 @@ static void do_remove(int argc, char** argv) {
         if(vfs_remove(disk, argv[0]) != 0 ) {
             printf("svfs remove: unable to remove \"%s\" from \"%s\" disk\n", file_name, disk_name);
         } else {
-            printf("svfs remove: file \"%s\" was removed from virtual disk (\"%s\")\n", file_name, disk_name);
+            printf("svfs remove: file \"%s\" has been removed from virtual disk (\"%s\")\n", file_name, disk_name);
         }
 
         fclose(disk);
