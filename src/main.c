@@ -150,7 +150,7 @@ static void do_delete(int argc, char** argv) {
     if(vfs_delete(disk_name) != 0) {
         printf("svfs: unable to delete \"%s\" disk\n", disk_name);
     } else {
-        printf("svfs: disk \"%s\" has been removed\n", disk_name);
+        printf("svfs: disk \"%s\" has been deleted\n", disk_name);
     }
 }
 
