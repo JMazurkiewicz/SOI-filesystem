@@ -20,7 +20,7 @@ int vfs_remove(FILE* disk, const char* file_name) {
             const vint_t first_block_offset = inode.first_block_offset;
 
             fseek(disk, -(long)sizeof(struct inode), SEEK_CUR);
-            const struct inode empty_inode = {};
+            const struct inode empty_inode = {0};
             fwrite(&empty_inode, sizeof(struct inode), 1, disk);
 
             fseek(disk, first_block_offset, SEEK_SET);
@@ -44,7 +44,7 @@ vint_t vfs_free_blocks(FILE* disk) {
         const vint_t next_block_offset = current_block.next_block_offset;
 
         fseek(disk, -(long)BLOCK_SIZE, SEEK_CUR);
-        const struct block empty_block = {};
+        const struct block empty_block = {0};
         fwrite(&empty_block, BLOCK_SIZE, 1, disk);
         ++freed_block_counter;
 

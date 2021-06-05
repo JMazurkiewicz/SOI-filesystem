@@ -28,9 +28,9 @@ static void do_new(int argc, char** argv) {
 
     const char* const disk_name = argv[0];
     if(vfs_new(disk_name, disk_size) != 0) {
-        printf("svfs new: unable to create \"%s\" disk file\n", disk_name);
+        printf("svfs new: unable to create \"%s.vd\" disk file\n", disk_name);
     } else {
-        printf("svfs: disk \"%s\" has been created\n", disk_name);
+        printf("svfs: disk \"%s.vd\" has been created\n", disk_name);
     }
 }
 
