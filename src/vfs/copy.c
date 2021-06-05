@@ -35,7 +35,11 @@ int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file, const char* file_nam
             .file_size = file_size,
             .first_block_offset = first_free_block_offset
         };
-        strncpy(new_inode.file_name, file_name, sizeof(new_inode.file_name));
+        if(strlen(file_name) > sizeof(new_inode.file_name) - 1) {
+            return -1;
+        }
+
+        strcpy(new_inode.file_name, file_name);
 
         write_inode(disk, &new_inode);
     }
