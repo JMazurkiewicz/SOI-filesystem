@@ -15,12 +15,17 @@ typedef uint32_t vint_t;
 
 #define BLOCK_SIZE ((vint_t)4096)
 #define SBLOCK_MAGIC ((vint_t)0x73766673)
+
 #define MAX_INODE_COUNT ((vint_t)32)
+#define MAX_FILENAME_LENGTH ((vint_t)32)
+
 #define HEADER_SIZE ((vint_t)(sizeof(struct super_block) + MAX_INODE_COUNT * sizeof(struct inode)))
 #define MIN_DISK_SIZE ((vint_t)(HEADER_SIZE + BLOCK_SIZE * MAX_INODE_COUNT))
+
 #define MAX_BLOCK_DATA ((vint_t)(BLOCK_SIZE - sizeof(vint_t)))
 #define END_BLOCK_MARK ((vint_t)(-1))
 #define FREE_BLOCK_MARK ((vint_t)0)
+
 #define FREE_INODE_MARK ((vint_t)0)
 
 struct block {
@@ -29,7 +34,7 @@ struct block {
 };
 
 struct inode {
-    char file_name[32];
+    char file_name[MAX_FILENAME_LENGTH];
     vint_t file_size;
     vint_t first_block_offset;
 };
@@ -51,8 +56,9 @@ struct block load_block(FILE* disk);
 struct inode load_inode(FILE* disk);
 struct super_block load_super_block(FILE* disk);
 
-bool validate_super_block(const struct super_block* sblock);
+vint_t calculate_block_index(vint_t block_offset);
 vint_t count_taken_inodes(const struct super_block* sblock);
+bool validate_super_block(const struct super_block* sblock);
 
 vint_t fseek_first_free_block(FILE* disk, const struct super_block* sblock);
 vint_t fseek_next_free_block(FILE* disk);

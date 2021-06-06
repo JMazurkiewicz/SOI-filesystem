@@ -21,12 +21,16 @@ struct super_block load_super_block(FILE* disk) {
     return sblock;
 }
 
-bool validate_super_block(const struct super_block* sblock) {
-    return sblock->magic == SBLOCK_MAGIC;
+vint_t calculate_block_index(vint_t block_offset) {
+    return (block_offset - HEADER_SIZE) / BLOCK_SIZE;
 }
 
 vint_t count_taken_inodes(const struct super_block* sblock) {
     return sblock->inode_count - sblock->free_inode_count;
+}
+
+bool validate_super_block(const struct super_block* sblock) {
+    return sblock->magic == SBLOCK_MAGIC;
 }
 
 vint_t fseek_first_free_block(FILE* disk, const struct super_block* sblock) {
