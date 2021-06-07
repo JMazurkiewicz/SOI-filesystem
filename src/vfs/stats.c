@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+static const char* const FREE_MSG = "Free";
+static const char* const OCCUPIED_MSG = "Occupied";
+static const char* const NONE_MSG = "None";
+
 static void vfs_stats_inodes(FILE* disk, const struct super_block* sblock);
 static void vfs_stats_blocks(FILE* disk, const struct super_block* sblock);
 
@@ -47,7 +51,7 @@ void vfs_stats_inodes(FILE* disk, const struct super_block* sblock) {
     for(vint_t i = 0; i < sblock->inode_count; ++i) {
         const struct inode current_inode = load_inode(disk);
 
-        const char* const status = (current_inode.first_block_offset == 0 ? "Free" : "Occupied");
+        const char* const status = (current_inode.first_block_offset == 0 ? FREE_MSG : OCCUPIED_MSG);
 
         printf("%-11"PRIVINT" | %-10"PRIVINT" | %-8s | %-32s\n", i, offset, status, current_inode.file_name);
 
@@ -56,9 +60,6 @@ void vfs_stats_inodes(FILE* disk, const struct super_block* sblock) {
 }
 
 static void vfs_stats_blocks(FILE* disk, const struct super_block* sblock) {
-    puts("Block index | Offset     | Status   | File name                       ");
-    puts("------------+------------+----------+---------------------------------");
-
     char** names = malloc(sizeof(char*) * sblock->inode_count);
     fseek(disk, sblock->first_inode_offset, SEEK_SET);
 
@@ -103,12 +104,15 @@ static void vfs_stats_blocks(FILE* disk, const struct super_block* sblock) {
     vint_t offset = sblock->first_block_offset;
     fseek(disk, sblock->first_block_offset, SEEK_SET);
 
+    puts("Block index | Offset     | Status   | File name                       ");
+    puts("------------+------------+----------+---------------------------------");
+
     for(vint_t i = 0; i < sblock->block_count; ++i) {
         const struct block current_block = load_block(disk);
 
         const bool is_free = (current_block.next_block_offset == FREE_BLOCK_MARK);
-        const char* status = (is_free ? "Free" : "Occupied");
-        const char* name = (is_free ? "None" : block_names[i]);
+        const char* status = (is_free ? FREE_MSG : OCCUPIED_MSG);
+        const char* name = (is_free ? NONE_MSG : block_names[i]);
 
         printf("%-11"PRIVINT" | %-10"PRIVINT" | %-8s | %-32s\n", i, offset, status, name);
 
@@ -118,7 +122,6 @@ static void vfs_stats_blocks(FILE* disk, const struct super_block* sblock) {
     for(vint_t i = sblock->inode_count; i-- > 0; ){
         free(names[i]);
     }
-
     free(block_names);
     free(names);
 }
