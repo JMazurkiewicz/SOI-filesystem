@@ -4,7 +4,7 @@
 
 Autor: Jakub Mazurkiewicz
 
-Uzyskana ocena: ?/8
+Uzyskana ocena: 8/8
 
 ## Treść zadania
 
@@ -22,4 +22,4 @@ cmake --build .
 ## Ocena
 
 * Koncepcja: 2/2
-* Program: ?/6
+* Program: 6/6
