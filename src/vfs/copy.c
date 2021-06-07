@@ -45,7 +45,7 @@ int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file, const char* file_nam
     }
 
     fseek(disk, first_free_block_offset, SEEK_SET);
-    vint_t block_offset = first_free_block_offset;
+    vint_t current_block_offset = first_free_block_offset;
 
     for(vint_t i = 0; i < required_full_blocks; ++i) {
         struct block block;
@@ -57,11 +57,13 @@ int vfs_copy_from_native_to_virtual(FILE* disk, FILE* file, const char* file_nam
             block.next_block_offset = fseek_next_free_block(disk);
         }
 
-        fseek(disk, block_offset, SEEK_SET);
+        fseek(disk, current_block_offset, SEEK_SET);
         write_block(disk, &block);
 
-        block_offset = block.next_block_offset;
-        fseek(disk, block_offset, SEEK_SET);
+        if(block.next_block_offset != current_block_offset + HEADER_SIZE) {
+            fseek(disk, block.next_block_offset, SEEK_SET);
+        }
+        current_block_offset = block.next_block_offset;
     }
 
     if(required_partial_block) {
@@ -101,6 +103,7 @@ int vfs_copy_from_virtual_to_native(FILE* disk, const char* file_name) {
             vint_t file_size = inode.file_size;
 
             fseek(disk, first_block_offset, SEEK_SET);
+            vint_t current_block_offset = first_block_offset;
 
             do {
                 const struct block current_block = load_block(disk);
@@ -111,7 +114,10 @@ int vfs_copy_from_virtual_to_native(FILE* disk, const char* file_name) {
 
                 if(next_block_offset != END_BLOCK_MARK) {
                     file_size -= current_block_size;
-                    fseek(disk, next_block_offset, SEEK_SET);
+                    if(next_block_offset != current_block_offset + BLOCK_SIZE) {
+                        fseek(disk, next_block_offset, SEEK_SET);
+                    }
+                    current_block_offset = next_block_offset;
                 } else {
                     break;
                 }
