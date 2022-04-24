@@ -1,16 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
-project("SOI - Virtual filesystem")
+project("SOI-VirtualFilesystem" LANGUAGES C)
 
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED True)
-
-if(MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif()
-
-set(
-    SOURCES
+add_executable(
+    svfs
 
     src/vfs/copy.c
     src/vfs/delete.c
@@ -24,5 +17,9 @@ set(
     src/main.c
 )
 
-add_executable(svfs ${SOURCES})
 target_include_directories(svfs PUBLIC include)
+target_compile_features(svfs PRIVATE c_std_99)
+
+if(MSVC)
+    target_compile_definitions(svfs PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
