@@ -1,3 +1,8 @@
-.vs*
-build/
-__*.*
+# Directories
+.vs*/
+/build/
+/.cache/
+
+# Binary files
+*.exe
+*.out
